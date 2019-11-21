@@ -12,11 +12,11 @@ app.use(bodyParser.urlencoded({ extended: true }))
 // Parse requests of content-type - application/json
 app.use(bodyParser.json())
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
-       next();
+    next();
 });
 
 
@@ -41,16 +41,45 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 // Import Models
 // const user = require('./models/user.model');
-const Users = require('./models/user.model.js')
+const Users = require('./models/user.model.js');
+// const PartneredUsers = require('./models/partneredUser.model.js')
+const Partner = require('./models/partnered.model.js');
 
 
 // Question 1 - Create a HTTP Request to add a users in the database :
 // When we create a user he doesn't have a score yet.
+app.post('/partners', (req, res) => {
+    let part = new Partner({
+        fname: req.body.fname,
+        lname: req.body.lname,
+        address: req.body.address
+    });
+
+    part.save((err, partner) => {
+        if (err) {
+            res.send(err)
+        }
+        res.json(partner)
+    });
+})
+
+
 app.post('/users', (req, res) => {
     let user = new Users(req.body);
 
     user.save((err, user) => {
-        if(err){
+        if (err) {
+            res.send(err)
+        }
+        res.json(user)
+    });
+})
+
+app.post('/', (req, res) => {
+    let partnered = new Users(req.body)
+
+    partnered.save((err, user) => {
+        if (err) {
             res.send(err)
         }
         res.json(user)
@@ -69,17 +98,28 @@ app.post('/users', (req, res) => {
 // })
 
 
-// Question 3 - Create a HTTP Request to fetch one user :
 app.post('/login', (req, res) => {
-    console.log(req.body)
+    // console.log(req.body)
     Users.findOne(req.body, (err, user) => {
-        console.log(user)
-
-        if(err){
+        if (err) {
             res.status(404).send(err)
-        }else if(user != null){
-            res.json({user})
-        }else{
+        } else if (user != null) {
+            // console.log(user.username)
+            res.json({ user })
+        } else {
+            res.status(404).send("Error")
+        }
+    })
+})
+
+app.post('/dashboardSearch', (req, res) => {
+    Partnered.find({address: req.body.address}, (err, user) => {
+        if (err) {
+            res.status(404).send(err)
+        } else if (user != null) {
+            // console.log(user.username)
+            res.json({ user })
+        } else {
             res.status(404).send("Error")
         }
     })
