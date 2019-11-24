@@ -22,7 +22,7 @@ app.use(function (req, res, next) {
 
 
 // Set up default mongoose connection
-let db_url = 'mongodb://127.0.0.1/user';
+let db_url = 'mongodb://127.0.0.1/iConnect';
 mongoose.connect(db_url, { useNewUrlParser: true });
 // Get the default connection
 var db = mongoose.connection;
@@ -44,16 +44,18 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 const Users = require('./models/user.model.js');
 // const PartneredUsers = require('./models/partneredUser.model.js')
 const Partner = require('./models/partnered.model.js');
-
+const Tracking = require('./models/track.model.js')
+const TrackingInfo = require('./models/trackingInfo.model.js')
 
 // Question 1 - Create a HTTP Request to add a users in the database :
 // When we create a user he doesn't have a score yet.
+// var x = [{ fname: "Aeromel", lname: "Laure", address: "Leyte", partneredId: "abc123" },
+// { fname: "Mibel", lname: "Paculanang", address: "Santander", partneredId: "mnb456" },
+// { fname: "Cherry", lname: "Herrera", address: "Sultan-Kudarat", partneredId: "hjkl654" },
+// { fname: "Faye", lname: "Catalvas", address: "Leyte", partneredId: "qwer45" },
+// { fname: "Mary", lname: "Tibs", address: "Dalaguete", partneredId: "asdf12" }]
 app.post('/partners', (req, res) => {
-    let part = new Partner({
-        fname: req.body.fname,
-        lname: req.body.lname,
-        address: req.body.address
-    });
+    let part = new Partner({ fname: "Mary", lname: "Tibs", address: "Dalaguete", partneredId: "asdf12" });
 
     part.save((err, partner) => {
         if (err) {
@@ -62,7 +64,6 @@ app.post('/partners', (req, res) => {
         res.json(partner)
     });
 })
-
 
 app.post('/users', (req, res) => {
     let user = new Users(req.body);
@@ -74,29 +75,6 @@ app.post('/users', (req, res) => {
         res.json(user)
     });
 })
-
-app.post('/', (req, res) => {
-    let partnered = new Users(req.body)
-
-    partnered.save((err, user) => {
-        if (err) {
-            res.send(err)
-        }
-        res.json(user)
-    });
-})
-
-
-// Question 2 - Create a HTTP Request to fetch all the users :
-// app.get('/allusers', (req, res) => {
-//     user.find({}, (err, user) => {
-//         if(err){
-//             res.send(err)
-//         }
-//         res.json({user: user})
-//     })
-// })
-
 
 app.post('/login', (req, res) => {
     // console.log(req.body)
@@ -112,8 +90,8 @@ app.post('/login', (req, res) => {
     })
 })
 
-app.post('/dashboardSearch', (req, res) => {
-    Partnered.find({address: req.body.address}, (err, user) => {
+app.get('/dashboardSearch', (req, res) => {
+    Partner.find({ address: req.body.address }, (err, user) => {
         if (err) {
             res.status(404).send(err)
         } else if (user != null) {
@@ -124,6 +102,71 @@ app.post('/dashboardSearch', (req, res) => {
         }
     })
 })
+
+app.post('/allPartners', (req, res) => {
+    Partner.find({}, (err, user) => {
+        if (err) {
+            res.status(404).send(err)
+        } else if (user != null) {
+            // console.log(user.username)
+            res.json({ user })
+        } else {
+            res.status(404).send("Error")
+        }
+    })
+})
+
+// app.post('/tracking', (req, res) => {
+//     let track = new Tracking({
+//         trackingNo: req.body.track,
+//         form: req.body.subForm
+//     });
+
+//     track.save((err, track) => {
+//         if (err) {
+//             res.send(err)
+//         }
+//         res.json({ track })
+//     });
+// })
+
+// app.post('/addTrack', (req, res) => {
+//     let track = new Tracking({
+//         trackingNo: "09161571895",
+//         form: "The quick brown fox jumps over the lazy dog"
+//     });
+
+//     track.save((err, track) => {
+//         if (err) {
+//             res.send(err)
+//         }
+//         res.json({ track })
+
+//         let tracking = new TrackingInfo({
+//             trackingNo: Tracking._id,
+//             address: "America"
+//         });
+
+//         tracking.save((err, trackings) => {
+//             if(err) {
+//                 res.send(err)
+//             }
+//             res.json({ trackings })
+//         })
+//     });
+// })
+
+// app.post('/findTrack', (req, res) => {
+//     TrackingInfo.
+//         findOne({ trackingNo: '09161571895' }).
+//         populate('Tracking').
+//         exec(function (err, tracking) {
+//             if (err) return handleError(err);
+//             console.log('This is the output', tracking.trackingNo);
+//             res.json(trackingInfo.Tracking)
+//             // prints "The author is Ian Fleming"
+//         });
+// })
 
 
 // // Question 4 - Create a HTTP Request to update firstName or/and lastName of a user :
