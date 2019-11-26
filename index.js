@@ -49,13 +49,13 @@ const TrackingInfo = require('./models/trackingInfo.model.js')
 
 // Question 1 - Create a HTTP Request to add a users in the database :
 // When we create a user he doesn't have a score yet.
-// var x = [{ fname: "Aeromel", lname: "Laure", address: "Leyte", partneredId: "abc123" },
-// { fname: "Mibel", lname: "Paculanang", address: "Santander", partneredId: "mnb456" },
-// { fname: "Cherry", lname: "Herrera", address: "Sultan-Kudarat", partneredId: "hjkl654" },
-// { fname: "Faye", lname: "Catalvas", address: "Leyte", partneredId: "qwer45" },
-// { fname: "Mary", lname: "Tibs", address: "Dalaguete", partneredId: "asdf12" }]
+// var x = [{ fname: "Aeromel", lname: "Laure", email: "aero@gmail.com", password: "1love@you", address: "Leyte", partneredId: "abc123" },
+// { fname: "Mibel", lname: "Paculanang", email: "mibel@gmail.com", password: "m1b3l@love", address: "Santander", partneredId: "mnb456" },
+// { fname: "Cherry", lname: "Herrera", email: "cherry@gmail.com", password: "c#3rryM@e", address: "Sultan-Kudarat", partneredId: "hjkl654" },
+// { fname: "Faye", lname: "Catalvas", email: "faye@gmail.com", password: "f@y3Erika", address: "Leyte", partneredId: "qwer45" },
+// { fname: "Mary", lname: "Tibs", email: "tibs@gmail.com", password: "t1b5M@ry", address: "Dalaguete", partneredId: "asdf12" }]
 app.post('/partners', (req, res) => {
-    let part = new Partner({ fname: "Mary", lname: "Tibs", address: "Dalaguete", partneredId: "asdf12" });
+    let part = new Partner({ fname: "Mary", lname: "Tibs", email: "tibs@gmail.com", password: "t1b5M@ry", address: "Dalaguete", partneredId: "asdf12" });
 
     part.save((err, partner) => {
         if (err) {
@@ -85,18 +85,29 @@ app.post('/login', (req, res) => {
             // console.log(user.username)
             res.json({ user })
         } else {
-            res.status(404).send("Error")
+            // res.status(404).send("Error")
+            Partner.findOne(req.body, (err, part) => {
+                if (err) {
+                    res.status(404).send(err)
+                } else if (part != null) {
+                    // console.log(user.username)
+                    res.json({ part })
+                } else {
+                    res.status(404).send("Error")
+                }
+            })
         }
     })
 })
 
 app.get('/dashboardSearch', (req, res) => {
-    Partner.find({ address: req.body.address }, (err, user) => {
+    Partner.find(req.body, (err, partners) => {
+        console.log(req.body)
         if (err) {
             res.status(404).send(err)
-        } else if (user != null) {
+        } else if (partners != null) {
             // console.log(user.username)
-            res.json({ user })
+            res.json({ partners })
         } else {
             res.status(404).send("Error")
         }
@@ -104,12 +115,12 @@ app.get('/dashboardSearch', (req, res) => {
 })
 
 app.post('/allPartners', (req, res) => {
-    Partner.find({}, (err, user) => {
+    Partner.find({}, (err, partner) => {
         if (err) {
             res.status(404).send(err)
-        } else if (user != null) {
+        } else if (partner != null) {
             // console.log(user.username)
-            res.json({ user })
+            res.json({ partner })
         } else {
             res.status(404).send("Error")
         }
