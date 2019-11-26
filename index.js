@@ -100,9 +100,9 @@ app.post('/login', (req, res) => {
     })
 })
 
-app.get('/dashboardSearch', (req, res) => {
-    Partner.find(req.body, (err, partners) => {
-        console.log(req.body)
+app.post('/dashboardSearch/:search', (req, res) => {
+    Partner.find({address : req.params.search}, (err, partners) => {
+        console.log(req.params.search)
         if (err) {
             res.status(404).send(err)
         } else if (partners != null) {
