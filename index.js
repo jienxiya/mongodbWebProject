@@ -44,7 +44,7 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 const Users = require('./models/user.model.js');
 // const PartneredUsers = require('./models/partneredUser.model.js')
 const Partner = require('./models/partnered.model.js');
-const Tracking = require('./models/track.model.js')
+const Authorization = require('./models/authorization.model.js')
 const TrackingInfo = require('./models/trackingInfo.model.js')
 
 // Question 1 - Create a HTTP Request to add a users in the database :
@@ -127,22 +127,33 @@ app.post('/allPartners', (req, res) => {
     })
 })
 
-app.post('/pusher', (req, res) => {
-    var notifications = {
-         "notifications": req.query
-    }
-    var pusher = new Pusher({
-       appId: '906630',
-       key: 'ea9fe3985cb69d3aff5d',
-       secret: 'f4d20401c2e102900b46',
-       cluster: 'ap1',
-       encrypted: true
-     });
-        pusher.trigger('my-channel', 'my-event', notifications); 
-        res.json({
-         message: 'Successful'
-     })
- })
+// app.post('/pusher', (req, res) => {
+//     var notifications = {
+//          "notifications": req.query
+//     }
+//     var pusher = new Pusher({
+//        appId: '906630',
+//        key: 'ea9fe3985cb69d3aff5d',
+//        secret: 'f4d20401c2e102900b46',
+//        cluster: 'ap1',
+//        encrypted: true
+//      });
+//         pusher.trigger('my-channel', 'my-event', notifications); 
+//         res.json({
+//          message: 'Successful'
+//      })
+//  })
+
+ app.post('/authLetter', (req, res) => {
+    let auth = new Authorization(req.body);
+
+    auth.save((err, auth) => {
+        if (err) {
+            res.send(err)
+        }
+        res.json(auth)
+    });
+})
 
 // app.post('/tracking', (req, res) => {
 //     let track = new Tracking({
