@@ -100,19 +100,19 @@ app.post('/login', (req, res) => {
     })
 })
 
-app.post('/dashboardSearch/:search', (req, res) => {
-    Partner.find({address : req.params.search}, (err, partners) => {
-        console.log(req.params.search)
-        if (err) {
-            res.status(404).send(err)
-        } else if (partners != null) {
-            // console.log(user.username)
-            res.json({ partners })
-        } else {
-            res.status(404).send("Error")
-        }
-    })
-})
+// app.post('/dashboardSearch/:search', (req, res) => {
+//     Partner.find({address : req.params.search}, (err, partners) => {
+//         console.log(req.params.search)
+//         if (err) {
+//             res.status(404).send(err)
+//         } else if (partners != null) {
+//             // console.log(user.username)
+//             res.json({ partners })
+//         } else {
+//             res.status(404).send("Error")
+//         }
+//     })
+// })
 
 app.post('/allPartners', (req, res) => {
     Partner.find({}, (err, partner) => {
@@ -126,6 +126,23 @@ app.post('/allPartners', (req, res) => {
         }
     })
 })
+
+app.post('/pusher', (req, res) => {
+    var notifications = {
+         "notifications": req.query
+    }
+    var pusher = new Pusher({
+       appId: '906630',
+       key: 'ea9fe3985cb69d3aff5d',
+       secret: 'f4d20401c2e102900b46',
+       cluster: 'ap1',
+       encrypted: true
+     });
+        pusher.trigger('my-channel', 'my-event', notifications); 
+        res.json({
+         message: 'Successful'
+     })
+ })
 
 // app.post('/tracking', (req, res) => {
 //     let track = new Tracking({
