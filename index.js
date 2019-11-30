@@ -23,7 +23,7 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 const Users = require('./models/user.model.js');
 const Partner = require('./models/partnered.model.js');
 const Authorization = require('./models/authorization.model.js')
-const TrackingInfo = require('./models/trackingInfo.model.js')
+const Tracking = require('./models/tracking.model.js')
 
 // var x = [{ fname: "Aeromel", lname: "Laure", email: "aero@gmail.com", password: "1love@you", address: "Leyte", partneredId: "abc123" },
 // { fname: "Mibel", lname: "Paculanang", email: "mibel@gmail.com", password: "m1b3l@love", address: "Santander", partneredId: "mnb456" },
@@ -31,7 +31,7 @@ const TrackingInfo = require('./models/trackingInfo.model.js')
 // { fname: "Faye", lname: "Catalvas", email: "faye@gmail.com", password: "f@y3Erika", address: "Leyte", partneredId: "qwer45" },
 // { fname: "Mary", lname: "Tibs", email: "tibs@gmail.com", password: "t1b5M@ry", address: "Dalaguete", partneredId: "asdf12" }]
 app.post('/partners', (req, res) => {
-    let part = new Partner({fname: "Faye", lname: "Catalvas", email: "faye@gmail.com", password: "f@y3Erika", address: "Leyte", partneredId: "qwer45" });
+    let part = new Partner({ fname: "Mary", lname: "Tibs", email: "tibs@gmail.com", password: "t1b5M@ry", address: "Dalaguete", partneredId: "asdf12" });
 
     part.save((err, partner) => {
         if (err) {
@@ -104,7 +104,7 @@ app.post('/allPartners', (req, res) => {
 })
 
 app.post('/onePartner/:part', (req, res) => {
-    Partner.find({email: req.params.part}, (err, partner) => {
+    Partner.find({ email: req.params.part }, (err, partner) => {
         if (err) {
             res.status(404).send(err)
         } else if (partner != null) {
@@ -117,23 +117,23 @@ app.post('/onePartner/:part', (req, res) => {
 
 app.post('/pusher', (req, res) => {
     var notify = {
-         notify: req.body
+        notify: req.body
     }
     var pusher = new Pusher({
-       appId: '906630',
-       key: 'ea9fe3985cb69d3aff5d',
-       secret: 'f4d20401c2e102900b46',
-       cluster: 'ap1',
-       encrypted: true
-     });
-    pusher.trigger('form', 'auth', notify); 
+        appId: '906630',
+        key: 'ea9fe3985cb69d3aff5d',
+        secret: 'f4d20401c2e102900b46',
+        cluster: 'ap1',
+        encrypted: true
+    });
+    pusher.trigger('form', 'auth', notify);
     res.json({
         message: 'Successful'
     })
-     console.log(notify)
- })
+    console.log(notify)
+})
 
- app.post('/authLetter', (req, res) => {
+app.post('/authLetter', (req, res) => {
     let auth = new Authorization(req.body);
 
     auth.save((err, auth) => {
@@ -142,6 +142,44 @@ app.post('/pusher', (req, res) => {
         }
         res.json(auth)
     });
+})
+
+app.post('/trackingInput', (req, res) => {
+    let track = new Tracking(req.body);
+
+    track.save((err, auth) => {
+        if (err) {
+            res.send(err)
+        }
+        res.json(auth)
+    });
+})
+
+app.post('/validateTrackingNum/:trackNum', (req, res) => {
+    Authorization.find({ trackingNum: req.params.trackNum }, (err, track) => {
+        console.log(track)
+        if (err) {
+            res.status(404).send(err)
+        } else if (track === req.params.trackNum) {
+            // console.log(user.username)
+            res.json({ track })
+            console.log(track)
+        } else {
+            res.status(404).send("Error")
+        }
+    })
+})
+
+app.post('/searchTrack/:trackNum', (req, res) => {
+    console.log(req.params.trackNum)
+    Tracking.find({ trackingNo: req.params.trackNum }, (err, track) => {
+        if (err) {
+            res.status(404).send(err)
+        } else {
+            res.json({ track })
+            console.log(track)
+        }
+    })
 })
 
 app.listen(port, () => {
