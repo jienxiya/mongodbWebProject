@@ -28,9 +28,9 @@ module.exports.validateAuth = (req, res) => {
 }
 
 module.exports.createPusher = (req, res) => {
-    var notify = {
-        notify: req.body
-    }
+    // var notify = {
+        // notify: req.body
+    // }
     var pusher = new Pusher({
         appId: '906630',
         key: 'ea9fe3985cb69d3aff5d',
@@ -38,9 +38,9 @@ module.exports.createPusher = (req, res) => {
         cluster: 'ap1',
         encrypted: true
     });
-    pusher.trigger('form', 'auth', notify);
+    pusher.trigger('form', 'auth', {notify: req.body});
     res.json({
         message: 'Successful'
     })
-    console.log(notify)
+    console.log(req.body)
 }
