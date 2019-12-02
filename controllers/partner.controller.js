@@ -40,3 +40,17 @@ module.exports.getOnePartner = (req, res) => {
         }
     })
 }
+
+module.exports.updateData = (req, res) => {
+    const value = {
+        profile: req.body
+    }
+
+    Partner.findByIdAndUpdate({id: req.params.myId},  value, (err, updated) => {
+        if(err){
+            res.json(err)
+        }else{
+            res.json({updated})
+        }
+    })
+}
