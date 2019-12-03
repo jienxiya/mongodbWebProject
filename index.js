@@ -27,68 +27,24 @@ const Users = require('./controllers/user.controller.js');
 const Partner = require('./controllers/partner.controller.js');
 const Authorization = require('./controllers/authorization.controller.js')
 const Tracking = require('./controllers/tracking.controller.js')
-const Pusher = require('./models/pusher.model.js')
+const Pusher = require('./controllers/pusher.controller.js')
 
 app.post('/partners', Partner.createPartner)
-
 app.post('/allPartners', Partner.fetchAllPartners)
-
 app.post('/profile/:email', Partner.updateInfo)
-
 app.post('/onePartner/:part', Partner.getOnePartner)
-
-// app.post('/updateProf/:email', Partner.oneUser)
-
 app.post('/users', Users.addUser)
-
 app.post('/login', Users.login)
-
 app.post('/oneUser/:email', Users.oneUser)
-
 app.post('/pusher', Authorization.createPusher)
-
 app.post('/authLetter', Authorization.createAuthorization)
-
 app.post('/validateTrackingNum/:trackNum', Authorization.validateAuth)
-
 app.post('/trackingInput', Tracking.createTracking)
-
 app.post('/searchTrack/:trackNum', Tracking.searchTrack)
-
-app.delete('/deletNotification/:notify', (req, res) => {
-    Pusher.deleteOne({tracknum: req.params.notify}, (err, deleteSuccess) => {
-        if(err){
-            res.json(err)
-        }else{
-            res.json(deleteSuccess)
-        }
-    })
-})
-
-app.post('/notification', (req, res) => {
-    console.log(req.body)
-    let push = new Pusher(req.body)
-    push.save((err, pusher) => {
-        if(err){
-            res.json(err)
-        }else(
-            res.json(pusher)
-        )
-    })
-})
-
-app.get('/notify/:email', (req, res) => {
-    Pusher.find({ email: req.params.email }, (err, pusher) => {
-        if (err) {
-            res.status(404).send(err)
-        } else if (pusher != null) {
-            console.log(pusher)
-            res.json({ pusher })
-        } else {
-            res.status(404).send("Error")
-        }
-    })
-})
+app.post('/notification', Pusher.createPusher)
+app.delete('/deletNotification/:notify', Pusher.deleteNotification)
+app.get('/notify/:email', Pusher.findPusher)
+app.get('/findNot/:track', Pusher.findPusherTrack)
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
