@@ -51,48 +51,54 @@ var storage = multer.diskStorage({
         cb(null, 'uploads')
     },
     filename: function (req, file, cb) {
+        file.originalname.replace(" ", "_");
+        file.originalname.replace(",", "_");
         var filename = "uploads_"+Date.now(new Date()).toString() +"_"+ file.originalname
         cb(null, filename)
     }
 })
 
 var upload = multer({ storage: storage })
+let store = ( filename,details , email ,res) => {
+    var imgUrl = 'http://localhost:3000/files/' + filename; //save this to db  
+    details.profilePic = imgUrl;
+    console.log(filename);
+    
+    Partner.updateInfo(details, email, res)
 
-// function to save image   rl  to mongodb
-let store = (filename) => {
-    //your servername + filename
-    var imgUrl = 'http://localhost:3000/files/uploads/' + filename; //save this to db  
+    
 }
 
 app.post('/uploadSingle', upload.single('img'), (req, res, next) => {
     const img = req.file
+    var details = JSON.parse(req.body.details)
+    var email = req.body.user
+    console.log(img);
+    
     if (!img) {
         const error = new Error('Please select a file')
         error.httpStatusCode = 400
         return next(error)
     }
     else {
-        store(img.filename)
-        img.filename =  'http://localhost:3000/files/' + img.filename
-        console.log(img)
-        res.send(img )
+        store(img.filename,details,email,res)
     }
 })
 
-app.post('/retrivePhoto', upload.single('img'), (req, res, next) => {
-    const img = req.file
-    if (!img) {
-        const error = new Error('Please select a file')
-        error.httpStatusCode = 400
-        return next(error)
-    }
-    else {
-        store(img.filename)
-        img.filename =  'http://localhost:3000/files/' + img.filename
-        console.log(img)
-        res.send(img )
-    }
-})
+// app.post('/retrivePhoto', upload.single('img'), (req, res, next) => {
+//     const img = req.file
+//     if (!img) {
+//         const error = new Error('Please select a file')
+//         error.httpStatusCode = 400
+//         return next(error)
+//     }
+//     else {
+//         store(img.filename)
+//         img.filename =  'http://localhost:3000/files/' + img.filename
+//         console.log(img)
+//         res.send(img )
+//     }
+// })
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}!`);

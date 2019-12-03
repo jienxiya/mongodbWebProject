@@ -56,12 +56,14 @@ module.exports.getOnePartner = (req, res) => {
 //     })
 // }
 
-module.exports.updateInfo = (req, res) => {
-    Partner.update({email: req.params.email}, req.body, (err, update) => {
-        if(err){
-            res.json(err)
-        }else{
-            res.json(update)
-        }
+module.exports.updateInfo = (details, email, res) => {
+//  console.log(details);
+ 
+    Partner.findOneAndUpdate({ email: email }, details, { new: true }, (err, update) => {
+        if (err) {
+            res.send(err)
+        } else {
+            res.send(update)
+        }   
     })
 }

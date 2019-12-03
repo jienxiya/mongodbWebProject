@@ -8,7 +8,7 @@ const partnerSchema = new Schema({
     address: {type: String, required: true},
     phoneNum: {type: String, required: true},
     partneredId: {type: String, optional: true},
-    profile: {type: String, optional: true}
+    profilePic: {type: String, optional: true}
 })
 
 module.exports = mongoose.model('Partner', partnerSchema);
