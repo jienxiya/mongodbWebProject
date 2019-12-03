@@ -32,13 +32,17 @@ app.post('/partners', Partner.createPartner)
 
 app.post('/allPartners', Partner.fetchAllPartners)
 
-app.post('/profile/:myId', Partner.updateData)
+app.post('/profile/:email', Partner.updateInfo)
 
 app.post('/onePartner/:part', Partner.getOnePartner)
+
+// app.post('/updateProf/:email', Partner.oneUser)
 
 app.post('/users', Users.addUser)
 
 app.post('/login', Users.login)
+
+app.post('/oneUser/:email', Users.oneUser)
 
 app.post('/pusher', Authorization.createPusher)
 
@@ -69,6 +73,21 @@ let store = (filename) => {
 }
 
 app.post('/uploadSingle', upload.single('img'), (req, res, next) => {
+    const img = req.file
+    if (!img) {
+        const error = new Error('Please select a file')
+        error.httpStatusCode = 400
+        return next(error)
+    }
+    else {
+        store(img.filename)
+        img.filename =  'http://localhost:3000/files/' + img.filename
+        console.log(img)
+        res.send(img )
+    }
+})
+
+app.post('/retrivePhoto', upload.single('img'), (req, res, next) => {
     const img = req.file
     if (!img) {
         const error = new Error('Please select a file')

@@ -17,7 +17,7 @@ module.exports.validateAuth = (req, res) => {
         console.log(track)
         if (err) {
             res.status(404).send(err)
-        } else if (track === req.params.trackNum) {
+        } else if (track !== null) {
             // console.log(user.username)
             res.json({ track })
             console.log(track)

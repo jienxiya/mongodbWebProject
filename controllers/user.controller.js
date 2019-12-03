@@ -34,3 +34,16 @@ module.exports.login = (req, res) => {
         }
     })
 }
+
+module.exports.oneUser = (req, res) => {
+    Users.findOne({email: req.params.email}, (err, user) => {
+        if (err) {
+            res.status(404).send(err)
+        } else if (user != null) {
+            // console.log(user.username)
+            res.json({ user })
+        } else {
+            res.status(404).send("Error")
+        }
+    })
+}
