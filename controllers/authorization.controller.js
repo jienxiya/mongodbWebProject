@@ -33,12 +33,12 @@ module.exports.createPusher = (req, res) => {
     // }
     var pusher = new Pusher({
         appId: '906630',
-        key: 'ea9fe3985cb69d3aff5d',
+        key: '19f814902a00899fa4c5',
         secret: 'f4d20401c2e102900b46',
         cluster: 'ap1',
         encrypted: true
     });
-    pusher.trigger('form', 'auth', {notify: req.body});
+    pusher.trigger('my-channel', 'my-event', {notify: req.body});
     res.json({
         message: 'Successful'
     })

@@ -1,12 +1,12 @@
 const Partner = require('../models/partnered.model.js');
-
-// { fname: "Cherry", lname: "Herrera", email: "cherry@gmail.com", password: "c#3rryM@e", address: "Sultan-Kudarat", partneredId: "hjkl654" }
-// { fname: "Mibel", lname: "Paculanang", email: "mibel@gmail.com", password: "m1b3l@love", address: "Santander", partneredId: "mnb456" },
-// { fname: "Cherry", lname: "Herrera", email: "cherry@gmail.com", password: "c#3rryM@e", address: "Sultan-Kudarat", partneredId: "hjkl654" },
+// { fullname: "Cherry Mae Herrera", username: "Cherr", email: "che@gmail.com", password: "1love@you", address: "Sultan Kudarat", phoneNum: "09994959196" }
+// { fullname: "Mary Jane Paller", username: "Mj", email: "mj@gmail.com", password: "dems@143mj", address: "Bohol", phoneNum: "09262290384" }
+// { fullname: "Aeromel Laure", username: "Aero", email: "aero@gmail.com", password: "1love@you", address: "Leyte", phoneNum: "09161571895" }
+// { fullname: "Merry Cris Ajoc", username: "Cris", email: "ajoc@gmail.com", password: "ajok@123", address: "Baybay, Leyte", phoneNum: "09993429618" }
 // { fname: "Faye", lname: "Catalvas", email: "faye@gmail.com", password: "f@y3Erika", address: "Leyte", partneredId: "qwer45" },
 // { fname: "Mary", lname: "Tibs", email: "tibs@gmail.com", password: "t1b5M@ry", address: "Dalaguete", partneredId: "asdf12" }]
 module.exports.createPartner = (req, res) => {
-    let part = new Partner({ fullname: "Cherry Mae Herrera", username: "Cherr", email: "che@gmail.com", password: "1love@you", address: "Sultan Kudarat", phoneNum: "09994959196" });
+    let part = new Partner({ fullname: "Merry Cris Ajoc", username: "Cris", email: "ajoc@gmail.com", password: "ajok@123", address: "Baybay, Leyte", phoneNum: "09993429618" });
 
     part.save((err, partner) => {
         if (err) {
