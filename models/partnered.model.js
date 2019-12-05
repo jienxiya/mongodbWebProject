@@ -7,7 +7,6 @@ const partnerSchema = new Schema({
     password: {type: String, required: true},
     address: {type: String, required: true},
     phoneNum: {type: String, required: true},
-    partneredId: {type: String, optional: true},
     profilePic: {type: String, optional: true}
 })
 

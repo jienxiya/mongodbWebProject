@@ -32,6 +32,7 @@ const Pusher = require('./controllers/pusher.controller.js')
 app.post('/partners', Partner.createPartner)
 app.post('/allPartners', Partner.fetchAllPartners)
 app.post('/profile/:email', Partner.updateInfo)
+app.post('/profileData/:email', Partner.updateData)
 app.post('/onePartner/:part', Partner.getOnePartner)
 app.post('/users', Users.addUser)
 app.post('/login', Users.login)
@@ -62,7 +63,6 @@ var upload = multer({ storage: storage })
 let store = ( filename,details , email ,res) => {
     var imgUrl = 'http://localhost:3000/files/' + filename; //save this to db  
     details.profilePic = imgUrl;
-    console.log(filename);
     
     Partner.updateInfo(details, email, res)
 
@@ -73,7 +73,6 @@ app.post('/uploadSingle', upload.single('img'), (req, res, next) => {
     const img = req.file
     var details = JSON.parse(req.body.details)
     var email = req.body.user
-    console.log(img);
     
     if (!img) {
         const error = new Error('Please select a file')
@@ -84,21 +83,6 @@ app.post('/uploadSingle', upload.single('img'), (req, res, next) => {
         store(img.filename,details,email,res)
     }
 })
-
-// app.post('/retrivePhoto', upload.single('img'), (req, res, next) => {
-//     const img = req.file
-//     if (!img) {
-//         const error = new Error('Please select a file')
-//         error.httpStatusCode = 400
-//         return next(error)
-//     }
-//     else {
-//         store(img.filename)
-//         img.filename =  'http://localhost:3000/files/' + img.filename
-//         console.log(img)
-//         res.send(img )
-//     }
-// })
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}!`);
