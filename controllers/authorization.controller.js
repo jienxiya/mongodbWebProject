@@ -1,4 +1,5 @@
 const Authorization = require('../models/authorization.model.js')
+const PusherController = require('./pusher.controller')
 var Pusher = require('pusher')
 
 module.exports.createAuthorization = (req, res) => {
@@ -39,8 +40,10 @@ module.exports.createPusher = (req, res) => {
         encrypted: true
     });
     pusher.trigger('my-channel', 'my-event', {notify: req.body});
+
     res.json({
         message: 'Successful'
     })
     console.log(req.body)
+    // PusherController.createPusher(req, res)
 }

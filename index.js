@@ -35,6 +35,7 @@ app.post('/profile/:email', Partner.updateInfo)
 app.post('/profileData/:email', Partner.updateData)
 app.post('/onePartner/:part', Partner.getOnePartner)
 app.post('/users', Users.addUser)
+app.post('/userData/:mail', Users.userData)
 app.post('/login', Users.login)
 app.post('/oneUser/:email', Users.oneUser)
 app.post('/pusher', Authorization.createPusher)
@@ -46,6 +47,7 @@ app.post('/notification', Pusher.createPusher)
 app.delete('/deletNotification/:notify', Pusher.deleteNotification)
 app.get('/notify/:email', Pusher.findPusher)
 app.get('/findNot/:track', Pusher.findPusherTrack)
+app.get('/updateNotif/:id', Pusher.updatePusher)
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -65,6 +67,7 @@ let store = ( filename,details , email ,res) => {
     details.profilePic = imgUrl;
     
     Partner.updateInfo(details, email, res)
+    // Users.UserInfo(details, email, res)
 
     
 }
@@ -81,6 +84,31 @@ app.post('/uploadSingle', upload.single('img'), (req, res, next) => {
     }
     else {
         store(img.filename,details,email,res)
+    }
+})
+
+let save = ( filename,details , email ,res) => {
+    var imgUrl = 'http://localhost:3000/files/' + filename; //save this to db  
+    details.profilePic = imgUrl;
+    
+    // Partner.updateInfo(details, email, res)
+    Users.UserInfo(details, email, res)
+
+    
+}
+
+app.post('/uploadUser', upload.single('img'), (req, res, next) => {
+    const img = req.file
+    var details = JSON.parse(req.body.details)
+    var email = req.body.user
+    
+    if (!img) {
+        const error = new Error('Please select a file')
+        error.httpStatusCode = 400
+        return next(error)
+    }
+    else {
+        save(img.filename,details,email,res)
     }
 })
 

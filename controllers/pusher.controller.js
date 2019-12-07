@@ -32,7 +32,7 @@ module.exports.findPusher = (req, res) => {
         } else {
             res.status(404).send("Error")
         }
-    })
+    }).sort({_id: -1})
 }
 
 module.exports.findPusherTrack = (req, res) => {
@@ -47,3 +47,17 @@ module.exports.findPusherTrack = (req, res) => {
         }
     })
 }   
+
+module.exports.updatePusher = (req, res) => {
+
+    Pusher.findByIdAndUpdate(req.params.id, {$set:{read: true}},{new: true}, (err, pusher) => {
+        console.log(req.params.id)
+        if (err) {
+            console.log(err)
+            res.status(503).send(err)
+        } else{
+            console.log("success")
+            res.json({ pusher })
+        }
+    })
+}

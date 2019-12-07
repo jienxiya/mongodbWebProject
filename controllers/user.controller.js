@@ -47,3 +47,27 @@ module.exports.oneUser = (req, res) => {
         }
     })
 }
+
+module.exports.userData = (req, res) => {
+    console.log(req.params.mail)
+    console.log(req.body)
+    Users.update({ email: req.params.mail }, { $set: req.body }, { new: true }, (err, update) => {
+        if (err) {
+            res.send(err)
+        } else {
+            res.json(update)
+            console.log(update)
+        }
+    })
+}
+
+module.exports.UserInfo = (details, email, res) => {
+    //  console.log(details);
+    Users.findOneAndUpdate({ email: email }, details, { new: true }, (err, update) => {
+        if (err) {
+            res.send(err)
+        } else {
+            res.send(update)
+        }
+    })
+}
